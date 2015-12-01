@@ -8,9 +8,10 @@ if [ ! -z $DISPLAY ] && which setxkbmap > /dev/null; then
   setxkbmap -layout us -option altwin:left_meta_win
 fi
 
-# Setup ssh-agent. This starts automatically with X, but not via ssh
+# Setup ssh-agent. This starts automatically with X, but not via ssh / cli
+# chroot.
 # Mostly from http://mah.everybody.org/docs/ssh
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -z $SSH_AGENT_PID ]; then
   SSH_ENV="$HOME/.ssh/environment"
 
   start_agent () {
@@ -18,6 +19,9 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
     ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
+    # NOTE: Will prompt to add key if not already added. Disabling this would
+    # match normal behavior in X, but it's kinda nice to force the addition
+    # right away.
     ssh-add
   }
 
