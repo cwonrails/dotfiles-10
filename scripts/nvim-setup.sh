@@ -10,6 +10,22 @@ if ! which nvim > /dev/null; then
     brew tap neovim/homebrew-neovim > /dev/null 2> /dev/null
     echo "  $ARROW Installing latest NeoVim from HEAD"
     brew install --HEAD neovim 2> /dev/null
+  elif [[ "$ARCH" == "arm"* ]]; then
+    # Neovim doesn't package for arm in the PPA
+    INSTALL_DIR=$HOME/.local/source/neovim
+    echo "  $ARROW Cloning neovim source"
+
+    # Prereqs:
+    # echo "  $ARROW Installing build dependencies"
+    # sudo apt-get -qfuy install libtool autoconf automake cmake g++ pkg-config unzip
+    # pushd $INSTALL_DIR > /dev/null
+    # echo "  $ARROW Cloning neovim repository"
+    # git clone https://github.com/neovim/neovim .
+    # echo "  $ARROW Building and installing"
+    # make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH=$HOME/.local"
+    # make install
+    # popd > /dev/null
+    # done!
   elif which apt-get > /dev/null; then
     echo "  $ARROW Adding NeoVim PPA (requires sudo)"
     sudo add-apt-repository ppa:neovim-ppa/unstable

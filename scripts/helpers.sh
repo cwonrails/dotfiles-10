@@ -2,6 +2,7 @@
 
 # Common Variables {{{
 OS=`uname`
+ARCH=`uname -m`
 
 export OS
 export DOTFILES=$HOME/dotfiles
