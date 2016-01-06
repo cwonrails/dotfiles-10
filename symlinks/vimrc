@@ -312,9 +312,6 @@ set showbreak=«
 " }}}
 
 " Colors & Syntax Highlighting {{{
-" Base install has some lame themes, this one is OK, I guess
-set background=dark
-silent! colorscheme industry
 
 " Enable syntax highlighting by default
 syntax enable
@@ -459,7 +456,7 @@ augroup filetype_tweaks
   autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 
   " Not all files should wrap automatically
-  autocmd BufNewFile,BufReadPost *.txt,*.md,*.markdown,*.json,*.conf,*.ini
+  autocmd BufNewFile,BufReadPost *.txt,*.md,*.markdown,*.json,*.conf,*.ini,*.sh
     \ setlocal textwidth=0
 
   " Enable spell checking & linebreaking at words in some filetypes

@@ -1,4 +1,4 @@
 [roxterm options]
 warn_close=0
-prefer_dark_theme=1
-colour_scheme=Tango
+prefer_dark_theme=0
+colour_scheme=GTK

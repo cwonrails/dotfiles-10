@@ -6,6 +6,7 @@ eslint
 eslint-plugin-mocha
 eslint-plugin-react
 eslint_d
+flow-bin
 js-beautify
 node-inspector
 nodemon
