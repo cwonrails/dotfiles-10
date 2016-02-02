@@ -2,7 +2,18 @@ general {
   colors = true
 }
 
+order += "wireless wlan0"
+order += "battery 0"
 order += "time"
+
+battery 0 {
+  format = "%status %percentage %remaining"
+}
+
+wireless wlan0 {
+  format_up = "W: %essid"
+  format_down = "W: down"
+}
 
 time {
   format = "%m-%d %H:%M"
