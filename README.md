@@ -60,6 +60,7 @@ TODO: Automate these steps.
 
 * Depending on the machine, you may need `pavucontrol` in order to unmute your audio output via GUI.
 ** Alternatively, find the name of the desired output via `pacmd list-sinks` then run `pacmd set-default-sink $SINK_NAME`
+* [Setup font hinting](https://wiki.debian.org/Fonts#Subpixel-hinting_and_Font-smoothing)?
 
 ### Mac
 
