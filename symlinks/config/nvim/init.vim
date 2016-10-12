@@ -10,6 +10,8 @@ endif
 call plug#begin()
 
 " Colors {{{
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'w0ng/vim-hybrid'
 " Temporary while developing colorscheme
 " Plug 'fortes/vim-escuro'
@@ -84,16 +86,19 @@ Plug 'tpope/vim-vinegar'
 " Show register contents when using " or @ in normal mode
 " Also shows when hitting <c-r> in insert mode
 Plug 'junegunn/vim-peekaboo'
+" " Trying this out
+" Plug 'junegunn/vim-pseudocl'
+" Plug 'junegunn/vim-oblique'
 " }}}
 
 " General coding {{{
-Plug 'fortes/vim-personal-snippets'
+Plug '~/vim-personal-snippets'
 " Temporary while editing
 "Plug '~/x/vim-personal-snippets/'
 " async :make via NeoVim job control, replaces syntastic for showing errors
 " Provides :Neomake and :Neomake!
 " Only load on first use of :Neomake command
-Plug 'benekastah/neomake', {
+Plug '~/neomake', {
 \   'on': ['Neomake']
 \ }
 " Use SignColumn to mark lines in Quickfix/Location list
@@ -145,13 +150,13 @@ Plug 'groenewege/vim-less', {
 Plug 'othree/yajs.vim', {
 \   'for': ['javascript']
 \ }
-Plug 'gavocanov/vim-js-indent', {
-\   'for': ['javascript']
-\ }
+" Plug 'gavocanov/vim-js-indent', {
+" \   'for': ['javascript']
+" \ }
 " JS syntax for common libraries
-Plug 'othree/javascript-libraries-syntax.vim', {
-\   'for': ['javascript']
-\ }
+" Plug 'othree/javascript-libraries-syntax.vim', {
+" \   'for': ['javascript']
+" \ }
 " Tern auto-completion engine for JS (requires node/npm)
 if executable('node')
   Plug 'marijnh/tern_for_vim', {
@@ -159,14 +164,16 @@ if executable('node')
 \     'for': ['javascript', 'coffee']
 \   }
 endif
+" Flow
+" if executable('flow')
+"   Plug '/home/fortes/vim-flow', {
+" \   'for': ['javascript']
+" \ }
+" endif
 " Makes gf work on node require statements
-Plug 'moll/vim-node', {
-\   'for': ['javascript']
-\ }
-" }}}
-
-" Misc Filetypes {{{
-Plug 'google/vim-jsonnet'
+" Plug 'moll/vim-node', {
+" \   'for': ['javascript']
+" \ }
 " }}}
 call plug#end()
 " }}}
@@ -185,6 +192,8 @@ endfor
 
 " Neovim-only config {{{
 " Useful reference for Neovim-only features (:help vim-differences)
+
+let g:deoplete#enable_at_startup = 1
 
 " Terminal {{{
 " Quickly open a shell below current window
@@ -265,13 +274,15 @@ augroup test_shortcuts
   " <leader>tf to test current file, <leader> twf to watch
   autocmd FileType javascript nnoremap <buffer> <silent> <leader>tf :TestFile<cr>
   autocmd FileType javascript nnoremap <buffer> <silent> <leader>twf :TestFile -w<cr><c-\><c-n><c-w><c-k>
+
+  autocmd FileType vim-test gT
 augroup END
 " }}}
 
 " NeoMake {{{
 if executable('eslint') || executable('eslint_d')
   " Use eslint/eslint_d if it's available
-  let g:neomake_javascript_enabled_makers = ['makeprg']
+  let g:neomake_javascript_enabled_makers = ['makeprg', 'flow']
 endif
 
 if executable('lessc')
@@ -337,8 +348,10 @@ let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 " }}}
 
 " Tern {{{
-let g:tern_show_signature_in_pum=1
-let g:tern_show_argument_hints=1
+" Use Flow for type completion instead of Tern
+" let g:tern_set_omni_function=0
+" let g:tern_show_signature_in_pum=1
+" let g:tern_show_argument_hints=1
 
 augroup tern_shortcuts
   autocmd!
@@ -348,6 +361,14 @@ augroup tern_shortcuts
   " <leader>td to go to definition
   autocmd FileType javascript nnoremap <buffer> <leader>td :TernDef<cr>
 augroup END
+" }}}
+
+" Flow {{{
+" Don't typecheck automatically (opt-in via :FlowToggle)
+let g:flow#enable = 0
+
+" Close quickfix if there are no errors
+let g:flow#autoclose=1
 " }}}
 
 " GitGutter {{{
@@ -391,13 +412,13 @@ let g:indent_guides_start_level=3
 let g:indent_guides_guide_size=1
 " }}}
 
-" Javascript libraries syntax {{{
-let g:used_javascript_libs='react'
-" }}}
+" " Javascript libraries syntax {{{
+" let g:used_javascript_libs='react'
+" " }}}
 
 " vim-jsx config {{{
 " Don't require .jsx extension
-let g:jsx_ext_required=0
+" let g:jsx_ext_required=0
 " }}}
 
 " }}}

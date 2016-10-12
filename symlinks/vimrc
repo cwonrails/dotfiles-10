@@ -526,6 +526,9 @@ augroup filetype_tweaks
   autocmd BufNewFile,BufReadPost *.txt,*.md,*.markdown,COMMIT_EDITMSG
     \ setlocal spell linebreak
 
+  " Temporarily enable spellcheck in code to see how annoying it gets
+  autocmd FileType javascript setlocal spell
+
   " Disable spell checking on unmodifiable files (what's the point?)
   autocmd BufReadPost * if !&modifiable | setlocal nospell | endif
 
@@ -552,7 +555,7 @@ augroup filetype_tweaks
 
   " Linting for LESS
   if executable('lessc')
-    autocmd FileType less setlocal makeprg=lessc\ --lint\ --no-color\ %
+    autocmd FileType less setlocal makeprg=lessc\ --lint\ --global-var=\"asset-url-prefix='/'\"\ --no-color\ %
     autocmd FileType less setlocal
           \ errorformat=%E%.%#Error:\ %m\ in\ %f\ on\ line\ %l\\,\ column\ %c:
     " Ignore unmatched lines
@@ -565,9 +568,9 @@ augroup filetype_tweaks
   endif
 
   " Use esformatter to autoformat (gq in Visual mode)
-  if executable('esformatter')
-    autocmd FileType javascript setlocal formatprg=esformatter
-  endif
+  " if executable('esformatter')
+  "   autocmd FileType javascript setlocal formatprg=esformatter
+  " endif
 
   " Simple folding for JS
   autocmd FileType javascript setlocal fdm=marker fmr={,}
