@@ -1,63 +1,42 @@
 #!/bin/bash
 set -ef -o pipefail
+# shellcheck source=/home/fortes/dotfiles/scripts/helpers.sh
+# shellcheck disable=SC1091
 source "$HOME/dotfiles/scripts/helpers.sh"
 
-NODE_SOURCES_FILE=/etc/apt/sources.list.d/node.list
-if [ ! -f "$NODE_SOURCES_FILE" ]; then
-  echo "$XMARK Node not in sources.list"
-  echo "  $ARROW Adding node to in sources.list (requires sudo)"
-  curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | \
+YARN_SOURCES_FILE=/etc/apt/sources.list.d/yarn.list
+if [ ! -f $YARN_SOURCES_FILE ]; then
+  echo "$XMARK Yarn not in sources.list"
+  echo "  $ARROW Adding yarn to in sources.list (requires sudo)"
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | \
     sudo apt-key add -
-
-  # TODO: Switch over to stretch, once ready
-  echo "deb https://deb.nodesource.com/node_6.x jessie main" | \
-    sudo tee "$NODE_SOURCES_FILE"
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | \
+    sudo tee "$YARN_SOURCES_FILE" > /dev/null
   sudo apt-get update -qq
 fi
+echo "$CMARK Yarn in sources.list"
 
-echo "$ARROW Installing node (requires sudo)"
-installAptPackagesIfMissing nodejs
+echo "$ARROW Installing node, npm, and yarn (requires sudo)"
+installAptPackagesIfMissing nodejs npm yarn
 
 if ! update-alternatives --get-selections | grep -v -q "^node"; then
   echo "$ARROW Updating alternatives to set symlinks for nodejs to node"
-  sudo update-alternatives --install /usr/bin/node node \
-    "$(command -v nodejs)" 10
+  sudo update-alternatives --install \
+    /usr/bin/node node "$(command -v nodejs)" 10
 fi
 echo "$CMARK Node system alternatives set"
 
-if ! command -v npm > /dev/null; then
-  echo "$XMARK npm not installed"
-  installAptPackagesIfMissing npm
-  exit 1
-fi
-echo "$CMARK npm installed"
-
+# Create directories for packages
 NPM_PREFIX=$HOME/.local
 NPM_CACHE_DIR=$HOME/.cache/npm
+mkdir -p "$NPM_PREFIX/bin"
+mkdir -p "$NPM_CACHE_DIR"
 
-# Create storage directory for npm packages
-if [ ! -d "$NPM_PREFIX" ]; then
-  echo "$ARROW Creating npm directory"
-  mkdir -p "$NPM_PREFIX"
-fi
-
-if ! npm get prefix | grep -qx "$NPM_PREFIX"; then
-  echo "$ARROW setting npm prefix to $NPM_PREFIX"
-  npm config set prefix "$NPM_PREFIX"
-fi
-unset NPM_PREFIX
-
-if ! npm get cache | grep -qx "$NPM_CACHE_DIR"; then
-  echo "$ARROW setting npm cache to $NPM_CACHE_DIR"
-  npm config set cache "$NPM_CACHE_DIR"
-fi
-unset NPM_CACHE_DIR
-
-# Cache output since npm list can be slow
-NPM_PACKAGES=$(npm list -g --depth 0)
+# Cache output since npm list is slow
+NODE_PACKAGES=$(npm list -g --depth 0)
 PACKAGES=''
-for p in $(xargs < "$HOME/dotfiles/scripts/npm-packages"); do
-  if ! echo "$NPM_PACKAGES" | grep -q "$p@"; then
+for p in $(xargs < "$HOME/dotfiles/scripts/node-packages"); do
+  if ! echo "$NODE_PACKAGES" | grep -q "$p@"; then
     echo "$XMARK npm package $p not installed"
     PACKAGES="$PACKAGES $p"
   else
@@ -66,9 +45,10 @@ for p in $(xargs < "$HOME/dotfiles/scripts/npm-packages"); do
 done
 
 if [ "$PACKAGES" != "" ]; then
-  echo "  $ARROW Installing global npm packages$PACKAGES"
-  npm install -g -q $PACKAGES
+  echo "  $ARROW Installing global node packages$PACKAGES"
+  # shellcheck disable=SC2086
+  npm install -g $PACKAGES
   echo "$CMARK $PACKAGES installed"
 fi
 
-echo "$CMARK All npm packages installed"
+echo "$CMARK All node packages installed"
