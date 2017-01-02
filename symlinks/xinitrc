@@ -1,3 +1,4 @@
+# vim:set ft=sh
 IS_CROUTON=0
 IS_HIDPI=0
 if command -v croutonversion > /dev/null; then
@@ -16,5 +17,12 @@ setxkbmap -layout us -option "ctrl:nocaps,altwin:left_meta_win" && \
   test "$IS_HIDPI" = 1 && xrandr --dpi 144 || true && \
   # More DPI
   test "$IS_HIDPI" = 1 && xrdb -merge ~/.Xresources || true && \
+  # TODO: Generalize this somehow to know which id we need
+  # Tap to click
+  xinput --set-prop 8 'Tapping Enabled' 1 &&
+  # Mouse acceleration
+  xinput --set-prop 8 'Accel Speed' 2 &&
+  # Australian scrolling
+  xinput --set-prop 8 'Natural Scrolling Enabled' 1
   # Begin!
   exec i3
