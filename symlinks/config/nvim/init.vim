@@ -44,6 +44,10 @@ Plug 'inside/vim-search-pulse'
 " For text objects, use z (s taken by surround.vim)
 " {action}z{char}{char}
 Plug 'justinmk/vim-sneak'
+" Async completion
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'steelsojka/deoplete-flow'
+Plug 'carlitux/deoplete-ternjs'
 " Snippet support, see configuration below
 Plug 'SirVer/ultisnips'
 " Comment / uncomment things quickly
@@ -65,7 +69,9 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
 " Extra motion commands, including:
 " - [f, ]f next/prev file in directory
+" - [l, ]l next/prev file in location list
 " - [n, ]n next/prev SCM conflict
+" - [q, ]q next/prev file in quickfix list
 " Toggles a few options:
 " - coh hlsearch
 " - con number
@@ -242,6 +248,16 @@ endfunction
 " }}}
 
 " Plugin Configuration {{{
+
+" Deoplete {{{
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#flow#flow_bin = 'flow'
+" let g:deoplete#omni#functions = {}
+" let g:deoplete#omni#functions.javascript = [ 'tern#Complete', 'flowcomplete#Complete' ]
+let g:deoplete#sources = {}
+let g:deoplete#sources['javascript'] = ['flow', 'ternjs']
+" }}}
+
 " Markify {{{
 " Use nicer symbols
 let g:markify_error_text = '✗'
