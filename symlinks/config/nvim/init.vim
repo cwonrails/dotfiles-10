@@ -118,7 +118,9 @@ Plug 'sbdchd/neoformat', { 'on': ['Neoformat'] }
 " async :make via NeoVim job control, replaces syntastic for showing errors
 " Provides :Neomake and :Neomake!
 " Only load on first use of :Neomake command
-Plug 'benekastah/neomake', { 'on': ['Neomake'] }
+" Plug 'benekastah/neomake', { 'on': ['Neomake'] }
+" async linting
+Plug 'w0rp/ale'
 " Use SignColumn to mark lines in Quickfix/Location list
 Plug 'dhruvasagar/vim-markify'
 " Test.vim: Run tests based on cursor position / file
@@ -232,21 +234,21 @@ function! g:OnVimEnter()
     autocmd!
     if exists(':Neoformat')
       " Run automatically before saving for supported filetypes
-      echom 'Setting up neoformat'
-      autocmd BufWritePre *.js Neoformat
+      " TODO: Enable
+      " autocmd BufWritePre *.js Neoformat
     endif
   augroup END
 
-  augroup neomake_automake
-    autocmd!
-    if exists(':Neomake')
-      " Check for lint errors on open & write for supported filetypes
-      autocmd BufRead,BufWritePost *.js,*.less,*.sh silent! Neomake
-    endif
-  augroup END
+  " augroup neomake_automake
+  "   autocmd!
+  "   if exists(':Neomake')
+  "     " Check for lint errors on open & write for supported filetypes
+  "     autocmd BufRead,BufWritePost *.js,*.less,*.sh silent! Neomake
+  "   endif
+  " augroup END
 endfunction
 " }}}
-
+"
 " Plugin Configuration {{{
 
 " Deoplete {{{
